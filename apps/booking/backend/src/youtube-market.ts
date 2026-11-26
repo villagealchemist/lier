@@ -114,7 +114,8 @@ export async function lookupYouTubeMarketVideos(input: YouTubeMarketInput, apiKe
     if (controller.signal.aborted) throw new RequestFailure('unavailable');
     const url = new URL(`https://www.googleapis.com/youtube/v3/${resource}`);
     for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
-    const response = await fetcher(url, { headers: { Accept: 'application/json', 'X-Goog-Api-Key': apiKey }, redirect: 'error', signal: controller.signal });
+    // Workers supports manual/follow only. Reject redirects before consuming a body.
+    const response = await fetcher(url, { headers: { Accept: 'application/json', 'X-Goog-Api-Key': apiKey }, redirect: 'manual', signal: controller.signal });
     if (controller.signal.aborted || response.redirected || response.status >= 300 && response.status < 400) { void response.body?.cancel().catch(() => undefined); throw new RequestFailure('unavailable'); }
     const length = response.headers.get('content-length');
     if (length !== null && (!/^\d+$/u.test(length) || Number(length) > maxBytes)) { void response.body?.cancel().catch(() => undefined); throw new RequestFailure('unavailable'); }

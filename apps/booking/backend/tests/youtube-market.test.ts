@@ -27,7 +27,7 @@ test('one bounded search and details call preserve source-native counts with can
   assert.equal(calls[0].url.searchParams.get('type'), 'video');
   assert.equal(calls[0].url.searchParams.get('videoCategoryId'), '10');
   assert.equal(calls[0].url.searchParams.has('regionCode'), false);
-  for (const call of calls) { assert.equal(call.url.origin, 'https://www.googleapis.com'); assert.equal(call.url.searchParams.get('maxResults'), '10'); assert.equal(call.url.href.includes(key), false); assert.equal(new Headers(call.init?.headers).get('X-Goog-Api-Key'), key); assert.equal(call.init?.redirect, 'error'); }
+  for (const call of calls) { assert.equal(call.url.origin, 'https://www.googleapis.com'); assert.equal(call.url.searchParams.get('maxResults'), '10'); assert.equal(call.url.href.includes(key), false); assert.equal(new Headers(call.init?.headers).get('X-Goog-Api-Key'), key); assert.equal(call.init?.redirect, 'manual'); }
 });
 
 test('no matching titles avoids a details request and does not use descriptions as identity evidence', async () => {
@@ -106,6 +106,27 @@ test('malformed payloads and declared or streamed oversized responses fail close
   for (const response of responses) {
     const result = await lookupYouTubeMarketVideos(input, key, { now, fetcher: async () => response });
     assert.equal(result.status, 'unavailable'); assert.deepEqual(result.videos, []);
+  }
+});
+
+test('redirects at either stage are never followed, even when a fetcher returns redirected success', async () => {
+  for (const stage of [1, 2]) for (const status of [301, 302, 307, 308, 200]) {
+    const calls: string[] = [];
+    let cancelled = false;
+    const result = await lookupYouTubeMarketVideos(input, key, { now, fetcher: async (url, init) => {
+      calls.push(String(url));
+      assert.equal(init?.redirect, 'manual');
+      if (calls.length !== stage) return Response.json({ items: [searchItem()] });
+      const response = new Response(new ReadableStream<Uint8Array>({ cancel() { cancelled = true; } }), { status, headers: { Location: 'https://untrusted.example/collect-secret' } });
+      if (status === 200) Object.defineProperty(response, 'redirected', { value: true });
+      return response;
+    } });
+    assert.equal(calls.length, stage);
+    assert.ok(calls.every(url => new URL(url).origin === 'https://www.googleapis.com'));
+    assert.equal(cancelled, true);
+    assert.equal(result.status, 'unavailable');
+    assert.deepEqual(result.videos, []);
+    assert.equal(JSON.stringify(result).includes(key), false);
   }
 });
 

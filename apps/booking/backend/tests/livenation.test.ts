@@ -32,7 +32,7 @@ test('unique exact name yields candidate listings with original date and geograp
   assert.equal(result.fetchedAt, '2026-11-26T18:00:00.000Z');
   assert.equal(result.coverage.status, 'ready');
   assert.equal(calls.length, 2);
-  for (const call of calls) { assert.equal(new URL(call.url).origin, 'https://www.livenation.com'); assert.equal(call.init?.redirect, 'error'); assert.ok(call.init?.signal instanceof AbortSignal); }
+  for (const call of calls) { assert.equal(new URL(call.url).origin, 'https://www.livenation.com'); assert.equal(call.init?.redirect, 'manual'); assert.ok(call.init?.signal instanceof AbortSignal); }
 });
 
 test('unknown artist returns incomplete coverage rather than no local audience', async () => {
@@ -99,6 +99,26 @@ test('mismatched artist pages and invalid JSON do not become usable listings', a
   for (const body of [page([event()], 'Different Artist'), `<h1>${artist.name}</h1><script type="application/ld+json">{broken</script>`]) {
     const result = await lookupLiveNation({ artistName: artist.name, now, fetcher: fetcherFor(body) });
     assert.equal(result.coverage.status, 'unavailable'); assert.equal(result.events.length, 0);
+  }
+});
+
+test('directory and artist-page redirects are never followed, including redirected success responses', async () => {
+  for (const stage of [1, 2]) for (const status of [301, 302, 307, 308, 200]) {
+    const calls: string[] = [];
+    let cancelled = false;
+    const result = await lookupLiveNation({ artistName: artist.name, now, fetcher: async (url, init) => {
+      calls.push(String(url));
+      assert.equal(init?.redirect, 'manual');
+      if (calls.length !== stage) return html(directory());
+      const response = new Response(new ReadableStream<Uint8Array>({ cancel() { cancelled = true; } }), { status, headers: { Location: 'https://untrusted.example/artist/K8vZ_fixture' } });
+      if (status === 200) Object.defineProperty(response, 'redirected', { value: true });
+      return response;
+    } });
+    assert.equal(calls.length, stage);
+    assert.ok(calls.every(url => new URL(url).origin === 'https://www.livenation.com'));
+    assert.equal(cancelled, true);
+    assert.equal(result.coverage.status, 'unavailable');
+    assert.deepEqual(result.events, []);
   }
 });
 

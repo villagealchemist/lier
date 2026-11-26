@@ -63,8 +63,13 @@ async function html(url: string, fetcher: typeof fetch): Promise<string> {
   });
   const request = async (): Promise<string> => {
     let response: Response;
-    try { response = await fetcher(url, { redirect: 'error', signal: controller.signal, headers: { Accept: 'text/html' } }); }
+    // Workers supports manual/follow only. Never follow a provider redirect.
+    try { response = await fetcher(url, { redirect: 'manual', signal: controller.signal, headers: { Accept: 'text/html' } }); }
     catch { throw new LiveNationError(controller.signal.aborted ? 'timeout' : 'unavailable'); }
+    if (response.redirected || response.status >= 300 && response.status < 400) {
+      void response.body?.cancel().catch(() => {});
+      throw new LiveNationError('unavailable');
+    }
     if (response.status === 429) throw new LiveNationError('rate_limited');
     if (!response.ok) throw new LiveNationError('unavailable');
     if (!response.headers.get('content-type')?.toLowerCase().includes('text/html')) throw new LiveNationError('invalid_payload');

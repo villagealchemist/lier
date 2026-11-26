@@ -44,7 +44,7 @@ function fixture(options: Fixture = {}): { fetcher: typeof fetch; calls: { url: 
   const fixtureTitle = `${fixtureArtist.name} live in Philadelphia`;
   const fetcher: typeof fetch = async (input, init) => {
     const url = new URL(String(input)); calls.push({ url, init });
-    assert.equal(init?.redirect, 'error');
+    assert.equal(init?.redirect, 'manual');
     assert.ok(init?.signal instanceof AbortSignal);
     if (url.origin === 'https://www.livenation.com') {
       assert.equal(new Headers(init?.headers).has('X-Goog-Api-Key'), false);
