@@ -1,0 +1,7 @@
+{
+  "youtube": { "enabled": false, "retentionDays": 30 },
+  "lastfm": { "enabled": false, "retentionDays": 7 },
+  "ticketmaster": { "enabled": false, "retentionDays": 7 },
+  "spotify": { "enabled": false, "retentionDays": 7 },
+  "soundcloud": { "enabled": false, "retentionDays": 7 }
+}
