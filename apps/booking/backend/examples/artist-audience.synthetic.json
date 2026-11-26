@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "importId": "synthetic-audience-example-001",
+  "kind": "artist_audience",
+  "synthetic": true,
+  "provenance": {
+    "provider": "example_artist_report",
+    "sourceAccountId": "example-artist-team",
+    "documentReference": "SYNTHETIC EXAMPLE. No report was retrieved from Spotify or any artist.",
+    "sourceGeneratedAt": "2026-11-25T12:00:00.000Z",
+    "authorization": {
+      "declared": true,
+      "basis": "artist_authorized_export",
+      "reference": "EXAMPLE ONLY. This is not a real authorization or license.",
+      "declaredBy": "example-operator",
+      "retainUntil": "2027-11-26T00:00:00.000Z"
+    }
+  },
+  "records": [
+    {
+      "recordId": "example-row-philadelphia",
+      "artistId": "artist-demo-001",
+      "platform": "spotify",
+      "metric": "listeners",
+      "value": 1200,
+      "availability": "reported",
+      "precision": "reported",
+      "observedPeriod": { "start": "2026-10-27", "end": "2026-11-25" },
+      "geography": { "city": "Philadelphia", "region": "PA", "countryCode": "US" }
+    },
+    {
+      "recordId": "example-row-new-york",
+      "artistId": "artist-demo-001",
+      "platform": "spotify",
+      "metric": "listeners",
+      "value": null,
+      "availability": "not_reported",
+      "precision": "reported",
+      "observedPeriod": { "start": "2026-10-27", "end": "2026-11-25" },
+      "geography": { "city": "New York", "region": "NY", "countryCode": "US" }
+    }
+  ]
+}

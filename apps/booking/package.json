@@ -1,0 +1,12 @@
+{
+  "name": "@lier/booking-workspace",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "LIER artist research and booking workspace",
+  "scripts": {
+    "test": "npm --prefix backend test && node --test dashboard/tests/*.test.ts",
+    "sources": "npm --prefix backend run sources",
+    "dashboard": "cd backend && node --env-file-if-exists=.env ../dashboard/server.ts"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "importId": "synthetic-show-example-001",
+  "kind": "show_outcomes",
+  "synthetic": true,
+  "provenance": {
+    "provider": "example_organizer_export",
+    "sourceAccountId": "example-organizer-account",
+    "documentReference": "SYNTHETIC EXAMPLE. No real ticketing or settlement data.",
+    "sourceGeneratedAt": "2026-11-25T12:00:00.000Z",
+    "authorization": {
+      "declared": true,
+      "basis": "organizer_owned_export",
+      "reference": "EXAMPLE ONLY. This is not a real authorization or license.",
+      "declaredBy": "example-operator",
+      "retainUntil": "2027-11-26T00:00:00.000Z"
+    }
+  },
+  "records": [
+    {
+      "recordId": "example-event-row-001",
+      "eventId": "example-event-001",
+      "eventDate": "2026-11-14",
+      "venue": {
+        "name": "Synthetic Example Venue",
+        "geography": { "city": "Philadelphia", "region": "PA", "countryCode": "US" }
+      },
+      "lineupArtistIds": ["artist-demo-001", "artist-demo-002"],
+      "paidAttendance": 381,
+      "refundedTickets": 8,
+      "complimentaryAttendance": 19,
+      "sellableCapacity": 500,
+      "netTicketRevenueMinor": 1023425,
+      "currency": "USD"
+    }
+  ]
+}

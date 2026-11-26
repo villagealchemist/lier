@@ -1,0 +1,13 @@
+{
+  "name": "lier",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Artist-first software for research, booking, ticketing and the business behind the music",
+  "engines": { "node": ">=26.0.0" },
+  "scripts": {
+    "test": "npm --prefix apps/booking test",
+    "dashboard": "npm --prefix apps/booking run dashboard",
+    "sources": "npm --prefix apps/booking run sources"
+  }
+}
