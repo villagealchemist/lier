@@ -64,3 +64,7 @@ The [original LIER vision](docs/ORIGINAL-VISION.md) included custom ticketing an
 Keep the original principles: artist-first economics, transparency about costs and payouts, respect for anonymity, and control over private records. User taste must remain identifiable as user taste; measured evidence needs its source and date. Predictions must remain distinguishable from actual outcomes.
 
 See [product scope](docs/PRODUCT-SCOPE.md) and [architecture boundaries](docs/ARCHITECTURE.md) for the planned connection between modules and the current implementation limits.
+
+### Public local evidence
+
+[Local interest research](docs/local-interest.md) collects public event listings and city-related video candidates without an aggregator subscription. The reusable engine separates confirmed activity, candidate matches, geographic audience observations, source failures and missing data. The current collectors do not estimate local listener totals or ticket turnout.
