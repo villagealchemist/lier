@@ -33,4 +33,8 @@ The original README proposed Kysely and Stripe Connect. Neither is installed or 
 
 ## Validation limits
 
-105 automated tests cover the imported implementation. They use controlled provider responses, SQLite and the actual HTTP handler in process. Real provider calls, real-socket browser use, production hosting and payment execution have not been verified. A separate TypeScript compiler type check has not been run.
+131 automated tests cover ingestion, the research helpers and the earlier local workspace. They use controlled provider responses, SQLite and the actual HTTP handler in process. Production provider collection, real-socket browser use, hosting of this local module and payment execution have not been verified. The Soundcharts adapter has separate live sandbox verification; see its source guide. The new research modules have strict TypeScript checks; the entire legacy repository has not had a separate compiler check.
+
+## Artist discovery and market selection
+
+The reusable engagement core accepts confirmed artist profiles without a booking city. The optional Soundcharts adapter independently resolves a stable Spotify ID and returns source-native city listening evidence with dates and partial-coverage semantics. Its production credentials are not configured. The hosted team demonstration is a separate client and is not the LIER product or a backend dependency.

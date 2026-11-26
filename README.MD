@@ -46,7 +46,16 @@ npm run dashboard
 
 Before starting the dashboard, copy `apps/booking/backend/.env.example` to `.env` in that same directory and set `LIER_DASHBOARD_PASSWORD` to a password of at least 12 characters. Source credentials stay in that untracked file. See [the module guide](apps/booking/dashboard/README.md).
 
-The module currently uses Node's SQLite API and a single-user, loopback-only service. Hosted team access and tenant isolation are not implemented. All 105 automated tests pass against controlled fixtures and in-process HTTP handlers. Live provider collection, real-socket browser QA and production deployment remain unverified. No payment processing or money movement is implemented.
+The module currently uses Node's SQLite API and a single-user, loopback-only service. Hosted team access and tenant isolation are not implemented. All 131 automated tests pass against controlled fixtures and in-process HTTP handlers. Production provider collection, real-socket browser QA and deployment of this local module remain unverified. No payment processing or money movement is implemented.
+
+## Artist research and optional market evidence
+
+Artist discovery is independent of a booking city. Confirm the artist, collect their available platform evidence, and then optionally evaluate a market.
+
+- [Engagement core](docs/engagement.md): platform-separated audience and recent response summaries, with sample coverage and missing counts. No dashboard dependency or inferred local demand.
+- [Spotify city-audience adapter](docs/soundcharts.md): an optional Soundcharts connection resolving a verified Spotify ID to global and city monthly listeners. It requires separate API credentials; only the restricted public sandbox has been exercised live.
+
+The temporary hosted team dashboard is maintained separately from LIER. It can vendor the reusable engagement module; its UI and deployment are not part of this repository. The existing local dashboard is an earlier prototype, not the hosted implementation.
 
 ## Product direction
 
