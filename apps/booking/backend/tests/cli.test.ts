@@ -8,9 +8,9 @@ import { fileURLToPath } from 'node:url';
 
 const root=fileURLToPath(new URL('..',import.meta.url));
 function workspace(){
-  const dir=mkdtempSync(join(tmpdir(),'fold-cli-'));
+  const dir=mkdtempSync(join(tmpdir(),'lier-cli-'));
   const run=(args:string[],extraEnv:Record<string,string>={})=>{
-    const env={...process.env,FOLD_DB_PATH:join(dir,'test.sqlite'),FOLD_POLICY_FILE:'',YOUTUBE_API_KEY:'',LASTFM_API_KEY:'',TICKETMASTER_API_KEY:'',SPOTIFY_ACCESS_TOKEN:'',SOUNDCLOUD_ACCESS_TOKEN:'',...extraEnv};
+    const env={...process.env,LIER_DB_PATH:join(dir,'test.sqlite'),LIER_POLICY_FILE:'',YOUTUBE_API_KEY:'',LASTFM_API_KEY:'',TICKETMASTER_API_KEY:'',SPOTIFY_ACCESS_TOKEN:'',SOUNDCLOUD_ACCESS_TOKEN:'',...extraEnv};
     const result=spawnSync(process.execPath,[resolve(root,'src/cli.ts'),...args],{cwd:root,env,encoding:'utf8',timeout:5000});
     assert.equal(result.error,undefined);return {status:result.status,data:JSON.parse(result.stdout),stdout:result.stdout,stderr:result.stderr};
   };
@@ -20,7 +20,7 @@ test('source readiness lists five providers without leaking tokens or creating a
   const w=workspace();try{const r=w.run(['sources'],{SPOTIFY_ACCESS_TOKEN:'never-print-me'});assert.equal(r.status,0);assert.equal(r.data.sources.length,5);assert.equal(r.data.sources.find(s=>s.source==='spotify').credentialConfigured,true);assert.ok(!r.stdout.includes('never-print-me'));assert.equal(existsSync(join(w.dir,'test.sqlite')),false);}finally{w.close();}
 });
 test('unknown policy sources fail closed before provider requests',()=>{
-  const w=workspace();try{const policy=join(w.dir,'policy.json');writeFileSync(policy,JSON.stringify({spoof:{enabled:true,retentionDays:7}}));const r=w.run(['sources'],{FOLD_POLICY_FILE:policy});assert.equal(r.status,1);assert.equal(r.data.error,'unknown_policy_source');}finally{w.close();}
+  const w=workspace();try{const policy=join(w.dir,'policy.json');writeFileSync(policy,JSON.stringify({spoof:{enabled:true,retentionDays:7}}));const r=w.run(['sources'],{LIER_POLICY_FILE:policy});assert.equal(r.status,1);assert.equal(r.data.error,'unknown_policy_source');}finally{w.close();}
 });
 test('disabled ingestion persists blocked status, supports inspection and explicit retry',()=>{
   const w=workspace();try{const path=join(w.dir,'request.json');writeFileSync(path,JSON.stringify({requestId:'cli-run',artistId:'cli-artist',source:'youtube',externalId:'UCabcdefghijklmnopqrstuv'}));

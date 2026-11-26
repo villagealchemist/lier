@@ -13,7 +13,7 @@ import { importEvidence, queryAudienceEvidence, queryShowOutcomes, purgeExpiredE
 const [command='help',...argv]=process.argv.slice(2);
 const emit=(value:unknown)=>process.stdout.write(JSON.stringify(value,null,2)+'\n');
 const readJson=(path:string):unknown=>{if(statSync(path).size>4_000_000)throw new IngestionError('input_file_too_large');return JSON.parse(readFileSync(path,'utf8'));};
-const dbPath=resolve(process.env.FOLD_DB_PATH??'data/fold-theory.sqlite');
+const dbPath=resolve(process.env.LIER_DB_PATH??'data/lier.sqlite');
 let store:Store|undefined;
 function database(){
   if(!store){mkdirSync(dirname(dbPath),{recursive:true,mode:0o700});store=new Store(dbPath);chmodSync(dbPath,0o600);}
@@ -26,8 +26,8 @@ function argumentsFor(count:number,allowedFlags:string[]=[]){
 }
 function loadPolicies():Policies{
   const policies=Object.fromEntries(sources.map(s=>[s.source,{enabled:false,retentionDays:s.source==='youtube'?30:7}])) as Policies;
-  if(!process.env.FOLD_POLICY_FILE)return policies;
-  const configured=object(readJson(process.env.FOLD_POLICY_FILE));
+  if(!process.env.LIER_POLICY_FILE)return policies;
+  const configured=object(readJson(process.env.LIER_POLICY_FILE));
   for(const [key,value]of Object.entries(configured)){
     if(!sources.some(s=>s.source===key))throw new IngestionError('unknown_policy_source');
     const policy=object(value);
@@ -38,7 +38,7 @@ function loadPolicies():Policies{
 }
 try{
   if(command==='help'||command==='--help'){
-    emit({product:'Fold Theory ingestion',version:'0.2.0',commands:{
+    emit({product:'LIER ingestion',version:'0.2.0',commands:{
       sources:'Configured access and last recorded run per provider; never prints credentials.',
       'identity-search "artist name"':'Find review candidates in Wikidata. No automatic identity linking.',
       'identity Q123':'Fetch cross-platform identity candidates for an explicit Wikidata item.',
@@ -55,7 +55,7 @@ try{
       purge:'Delete expired provider and imported values.'
     }});
   }else if(command==='identity'||command==='identity-search'){
-    const {args}=argumentsFor(1);const options={get:createJsonGet(),userAgent:process.env.FOLD_USER_AGENT};
+    const {args}=argumentsFor(1);const options={get:createJsonGet(),userAgent:process.env.LIER_USER_AGENT};
     emit(command==='identity'?await resolveIdentity(args[0],options):await searchIdentities(args[0],options));
   }else if(command==='sources'){
     argumentsFor(0);const policies=loadPolicies();

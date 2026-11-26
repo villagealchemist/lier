@@ -1,12 +1,12 @@
-# Fold Theory source feasibility
+# LIER source feasibility
 
 Reviewed against official documentation on November 26, 2026.
 
 ## The actual objective
 
-Collect data from the platforms and records that underpin music-market analysis, then make it useful for Fold Theory's booking decisions. Chartmetric is a coverage benchmark and an optional supplier, not a required dependency. Matching an aggregator's source names is not the same as matching its fields, historical depth, geographic reach, refresh cadence, licensing, identity graph or proprietary estimates.
+Collect data from the platforms and records that underpin music-market analysis, then make it useful for booking decisions. Chartmetric is a coverage benchmark and an optional supplier, not a required dependency. Matching an aggregator's source names is not the same as matching its fields, historical depth, geographic reach, refresh cadence, licensing, identity graph or proprietary estimates.
 
-Chartmetric publishes a broad [platform catalog](https://chartmetric.com/data/platforms) and [coverage overview](https://chartmetric.com/data). These establish what it says it covers. They do not establish how it obtains each field or whether Fold Theory can access that field under the same conditions. Proprietary Chartmetric scores and modeled audiences are not platform-native facts we can reconstruct from a list of API endpoints.
+Chartmetric publishes a broad [platform catalog](https://chartmetric.com/data/platforms) and [coverage overview](https://chartmetric.com/data). These establish what it says it covers. They do not establish how it obtains each field or whether LIER can access that field under the same conditions. Proprietary Chartmetric scores and modeled audiences are not platform-native facts we can reconstruct from a list of API endpoints.
 
 ## Priority source map
 
@@ -26,9 +26,9 @@ Chartmetric publishes a broad [platform catalog](https://chartmetric.com/data/pl
 | MusicBrainz | Stable artist identifiers and metadata | Public API has rate and identification requirements; commercial use has a separate service route. Useful for identity, not demand. | MBID input supported; automated lookup not implemented |
 | Beatport, Resident Advisor, Bandcamp | Potential electronic-music charts, release and event context | No general production-ready acquisition path has been verified in this investigation. Establish official partner/feed/export access and exact fields before committing coverage. | Open research |
 | Radio and remaining regional DSPs | Airplay and regional listening/chart signals | Source-specific access investigation needed. No claim of parity with Chartmetric's coverage. | Open research |
-| Fold Theory ticketing and settlements | Paid attendance, refunds, net sales, capacity, venue, promotion spend and lineup | Authorized organizer exports or API access from whichever providers the team uses. This is the necessary ground truth for validating booking decisions. | Provider-independent JSON importer implemented and tested; actual organizer provider and data not yet supplied |
+| Organizer ticketing and settlement reports | Paid attendance, refunds, net sales, capacity, venue, promotion spend and lineup | Authorized organizer exports or API access. This is the necessary ground truth for validating booking decisions. | Provider-independent JSON importer implemented and tested; actual organizer provider and data not yet supplied |
 
-The five current adapters cover provider-native counters, profiles, and paginated event listings. A separate import path accepts authorized artist audience reports and organizer outcomes with source dates, geographic scope, explicit retention, and correction handling. These interfaces do not establish live data access or sufficient booking coverage by themselves. Source priority should follow Fold Theory's artist roster and markets.
+The five current adapters cover provider-native counters, profiles, and paginated event listings. A separate import path accepts authorized artist audience reports and organizer outcomes with source dates, geographic scope, explicit retention, and correction handling. These interfaces do not establish live data access or sufficient booking coverage by themselves. Source priority should follow the artists and markets being researched.
 
 ## Access is not the same as usefulness
 
@@ -59,4 +59,4 @@ The most consequential unresolved metric is **artist audience by booking market*
 - Wikidata: [data access](https://www.wikidata.org/wiki/Wikidata:Data_access), [MusicBrainz property](https://www.wikidata.org/wiki/Property:P434), [Spotify property](https://www.wikidata.org/wiki/Property:P1902), [YouTube property](https://www.wikidata.org/wiki/Property:P2397), [SoundCloud handle property](https://www.wikidata.org/wiki/Property:P3040).
 - MusicBrainz: [API access](https://musicbrainz.org/doc/MusicBrainz_API), [rate limits](https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting).
 
-These references document available interfaces and restrictions, not confirmed credentials or commercial agreements for Fold Theory. No provider applications, purchases, subscriptions or outreach were performed. All five adapter credentials remain absent. A direct execution-runtime request to Wikidata returned ENOTFOUND; documentation browsing succeeded separately. No live adapter is verified. See LIVE-CHECKS.md for the release verification boundary.
+These references document available interfaces and restrictions, not confirmed credentials or commercial agreements for LIER. No provider applications, purchases, subscriptions or outreach were performed. All five adapter credentials remain absent. A direct execution-runtime request to Wikidata returned ENOTFOUND; documentation browsing succeeded separately. No live adapter is verified. See LIVE-CHECKS.md for the release verification boundary.

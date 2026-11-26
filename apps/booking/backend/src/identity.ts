@@ -49,7 +49,7 @@ export function parseIdentity(payload:unknown,entityId:string,collectedAt:string
 export async function resolveIdentity(entityId:string,options:{get:JsonGet;now?:()=>Date;userAgent?:string}){
   if(!/^Q[1-9]\d*$/.test(entityId))throw new IngestionError('invalid_wikidata_id');
   const url=new URL(`https://www.wikidata.org/wiki/Special:EntityData/${entityId}.json`);
-  const payload=await options.get(url,{userAgent:options.userAgent??'FoldTheory/0.2.0 (local artist identity research)'});
+  const payload=await options.get(url,{userAgent:options.userAgent??'LIER/0.2.0 (local artist identity research)'});
   return parseIdentity(payload,entityId,(options.now??(()=>new Date()))().toISOString());
 }
 
@@ -57,7 +57,7 @@ export async function searchIdentities(query:string,options:{get:JsonGet;userAge
   if(typeof query!=='string'||query.trim().length<2||query.length>120||/[\x00-\x1f\x7f]/.test(query))throw new IngestionError('invalid_identity_search');
   const url=new URL('https://www.wikidata.org/w/api.php');
   url.search=new URLSearchParams({action:'wbsearchentities',search:query.trim(),language:'en',uselang:'en',type:'item',limit:'10',format:'json',maxlag:'5'}).toString();
-  const body=object(await options.get(url,{userAgent:options.userAgent??'FoldTheory/0.2.0 (local artist identity research)'}));
+  const body=object(await options.get(url,{userAgent:options.userAgent??'LIER/0.2.0 (local artist identity research)'}));
   if(body.error)throw new IngestionError('identity_search_unavailable');
   return {query,candidates:list(body.search).map(item=>{
     const candidate=object(item);if(typeof candidate.id!=='string'||!/^Q[1-9]\d*$/.test(candidate.id))throw new IngestionError('invalid_provider_payload');

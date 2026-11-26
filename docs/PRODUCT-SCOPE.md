@@ -1,8 +1,8 @@
 # LIER product scope
 
-## Product and first collective
+## Product
 
-LIER is the product. Fold Theory is a collective MJ already works with and the first use case for this module. The Fold Theory branding in the current dashboard represents that workspace, not the platform's product name. A general branding/tenant system is not yet implemented.
+LIER provides software for artist research, booking decisions, event operations and financial outcomes. Its current implementation is a local booking workspace. Workspace membership, hosted authorization and tenant isolation are not yet implemented.
 
 The product ambition is moneymaking behind the music: understanding opportunity, choosing a financially workable booking, selling and operating an event, and knowing the actual result. Ticketing belongs inside that loop.
 
@@ -34,8 +34,8 @@ This milestone is not complete. Current code has separately testable evidence, r
 
 ## Working rules
 
-- Keep every deployed dashboard and data endpoint password protected. Existing event protection must survive the domain transition.
-- Start with an explicit single-collective boundary. A shared password does not establish user roles or multi-tenant isolation.
+- Keep every deployed dashboard and data endpoint password protected. Hosting changes must preserve authenticated access.
+- Start with an explicit single-workspace boundary. A shared password does not establish user roles or multi-tenant isolation.
 - Never substitute fabricated statistics for absent source data, or a configuration flag for a verified live connection.
 - Store monetary values as integer minor units with their currency. Cross-currency totals require a recorded conversion policy and rate; the current booking calculator is USD-only.
 - Keep attendee identities, marketing consent, aggregate audience analytics and anonymous feedback separate.
@@ -43,6 +43,6 @@ This milestone is not complete. Current code has separately testable evidence, r
 
 ## Current deployment boundary
 
-foldtheory.fyi remains the Friendsgiving experience. Its RSVP snapshot and preserved-version references are maintained privately outside this repository. No RSVP records, credentials, production databases, or old fictional UI were imported into LIER.
+The current dashboard is a local Node application. No production deployment, hosted team access or live provider feed has been verified. Credentials, runtime databases and private event records must remain outside application source.
 
-The current dashboard is a local Node application. The existing domain uses a Sites/Cloudflare deployment. Recovering its source, completing the archive, adapting the runtime/storage, preserving password protection and verifying the domain remain separate unfinished deployment tasks.
+A hosted release requires a compatible runtime, persistent storage, managed secrets, HTTPS, authenticated access and deployment validation. The current loopback-only server must not be exposed directly. See [deployment requirements](../apps/booking/dashboard/DEPLOYMENT.md).

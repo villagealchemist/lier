@@ -1,4 +1,4 @@
-# Fold Theory backend architecture
+# LIER backend architecture
 
 ## Purpose and current boundary
 
@@ -18,14 +18,14 @@ No provider credentials were available during development. A runtime Wikidata pr
 
 The provider registry currently covers YouTube counters, Last.fm counters, Ticketmaster events, Spotify profiles and exposed follower/popularity fields, and SoundCloud profiles and exposed account counters. An unavailable field remains unavailable; no adapter substitutes an invented value. Detailed access constraints remain in [SOURCE-MAP.md](SOURCE-MAP.md).
 
-Node supplies the HTTP client, test runner and SQLite implementation. TypeScript expresses contracts; Node runs the files by type stripping, and a separate compiler typecheck has not been performed. SQLite supports the current local scope. Its presence does not establish a distributed production warehouse.
+Node supplies HTTP requests, the test runner and SQLite implementation. TypeScript expresses contracts; Node runs the files by type stripping, and a separate compiler typecheck has not been performed. SQLite supports the current local scope. Its presence does not establish a distributed production warehouse.
 
 ## Record boundaries
 
 | Record | Purpose | Implemented behavior |
 | --- | --- | --- |
 | Identity candidate | Preserve community-supplied cross-platform identifiers and conflicting claims | Wikidata entity revision, property, statement, rank and reference count; review required |
-| Confirmed source identity | Link a canonical Fold Theory artist ID to a provider entity | Operator-supplied mapping, uniqueness enforced; Last.fm UUID case normalized with legacy-safe checks |
+| Confirmed source identity | Link a canonical LIER artist ID to a provider entity | Operator-supplied mapping, uniqueness enforced; Last.fm UUID case normalized with legacy-safe checks |
 | Ingestion run | Idempotency, ownership and operational state | Request fingerprint, status, attempt count, fencing token, lease expiry, collection times, data expiry, safe errors and retry delay |
 | Provider observation | Preserve one platform's native metric | Exact metric name, unit, scope, period, availability and precision; geographic scope remains unknown where unavailable |
 | Provider profile | Preserve optional display identity from Spotify/SoundCloud | Validated name and constrained provider URL; expires with its snapshot |
@@ -67,7 +67,7 @@ Synthetic examples require explicit import opt-in and remain excluded from ordin
 
 ## Source meaning, time and retention
 
-- A stream, listener, follower, subscriber, event RSVP and paid attendee are different units. Platform populations cannot be summed into unique people without a defensible model and the required permissions.
+- A stream, listener, follower, subscriber, ticket order and paid attendee are different units. Platform populations cannot be summed into unique people without a defensible model and the required permissions.
 - Artist hometown never becomes listener geography. Imported geography comes from explicit report fields.
 - Collection start/completion, source update time and an imported observation period are separate fields. Current provider adapters do not establish source measurement timestamps, so those remain null.
 - Missing, hidden, suppressed, unreturned and zero retain distinct semantics. Denied access fails visibly and never falls back to synthetic data.
@@ -81,7 +81,7 @@ Existing local databases are upgraded without a rebuild. Lease/provenance column
 ## Next backend slices
 
 1. **Prove an authorized live vertical slice.** Establish working runtime connectivity, configure an approved source, verify real artist identities, retrieve and query an observation, then verify refresh and actual field coverage. Fixture success does not satisfy this milestone.
-2. **Close the local-demand access gap.** Obtain artist-authorized reports or an appropriate licensed route for local audience evidence, and identify Fold Theory's actual organizer/ticketing exports. The import schema exists; real access and provider-specific conversion still need verification.
+2. **Close the local-demand access gap.** Obtain artist-authorized reports or an appropriate licensed route for local audience evidence, and identify the organizer/ticketing export formats to support. The import schema exists; real access and provider-specific conversion still need verification.
 3. **Complete source onboarding.** Add OAuth consent and token refresh where appropriate, durable access-grant/revocation records, and further platform adapters against confirmed entitlements. Direct Spotify monthly listening geography remains unimplemented.
 4. **Operationalize collection and retention.** Introduce scheduling, lease heartbeat, provider/tenant quota coordination, full attempt auditing, schema-release management, monitoring, managed secrets and backup policies. Select a deployed warehouse when scale and concurrency requirements are established.
 5. **Extend identity and reconciliation.** Add reviewed entity linking, alias/collaboration handling, track/release identifiers and reversible corrections. A community-maintained ID candidate is evidence to review, not an automatic identity decision.
@@ -92,4 +92,4 @@ Existing local databases are upgraded without a rebuild. Lease/provenance column
 
 Complete for this slice: executable adapters and CLI workflows, candidate discovery, strict report/outcome imports, persistent provenance, idempotency, recoverable fenced claims, retention and revision handling, deterministic tests, source-access documentation and explicit gaps.
 
-Not established: live provider connectivity or entitlements, Chartmetric-equivalent breadth/history/geography, an unattended production system, automatic consent/token lifecycle, direct ticketing-platform integrations, source-approved scoring, or a validated booking recommendation. This release cannot yet identify which real artist Fold Theory should book.
+Not established: live provider connectivity or entitlements, Chartmetric-equivalent breadth/history/geography, an unattended production system, automatic consent/token lifecycle, direct ticketing-platform integrations, source-approved scoring, or a validated booking recommendation. This release does not yet provide validated booking recommendations.

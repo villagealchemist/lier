@@ -1,4 +1,4 @@
-# Fold Theory ingestion backend
+# LIER ingestion backend
 
 Version 0.2 builds the data foundation for artist booking research: direct provider adapters, identity candidates, authorized report imports, source-aware storage, and recoverable ingestion. It does not use Chartmetric as its backend. No UI or deployment is part of this release.
 
@@ -28,7 +28,7 @@ npm run sources
 node src/cli.ts help
 ```
 
-Put authorized credentials in an untracked `.env` file, and point `FOLD_POLICY_FILE` to a source-policy JSON file. Every source defaults to disabled. Each configured policy has exactly `enabled` and `retentionDays`; accepted retention is 1–30 days. Enable a source only after establishing its intended access and retention. `LASTFM_COMMERCIAL_APPROVED=true` records an existing agreement; it does not acquire one. Spotify and SoundCloud token creation and refresh are not implemented.
+Put authorized credentials in an untracked `.env` file, and point `LIER_POLICY_FILE` to a source-policy JSON file. Every source defaults to disabled. Each configured policy has exactly `enabled` and `retentionDays`; accepted retention is 1–30 days. Enable a source only after establishing its intended access and retention. `LASTFM_COMMERCIAL_APPROVED=true` records an existing agreement; it does not acquire one. Spotify and SoundCloud token creation and refresh are not implemented.
 
 ```sh
 cp .env.example .env
@@ -39,7 +39,7 @@ node --env-file=.env src/cli.ts sources
 
 ## Collect and inspect provider evidence
 
-Each request specifies an operator-verified provider identity and a canonical Fold Theory artist ID. Replace the placeholder channel ID before using this request:
+Each request specifies an operator-verified provider identity and a canonical LIER artist ID. Replace the placeholder channel ID before using this request:
 
 ```json
 {

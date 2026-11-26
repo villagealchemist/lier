@@ -66,8 +66,8 @@ function patch(input: unknown): Partial<Artist> {
 }
 function policiesFrom(env: Record<string, string | undefined>): Policies {
   const result = Object.fromEntries(sources.map(s => [s.source, { enabled: false, retentionDays: s.source === 'youtube' ? 30 : 7 }])) as Policies;
-  if (!env.FOLD_POLICY_FILE) return result;
-  const bytes = readFileSync(env.FOLD_POLICY_FILE);
+  if (!env.LIER_POLICY_FILE) return result;
+  const bytes = readFileSync(env.LIER_POLICY_FILE);
   if (bytes.byteLength > 16_000) throw new DashboardError('source_policy_too_large');
   const value = object(JSON.parse(bytes.toString('utf8')));
   for (const [source, raw] of Object.entries(value)) {

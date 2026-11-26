@@ -1,30 +1,38 @@
-# foldtheory.fyi transition
+# LIER deployment
 
-## Authorized outcome
+## Current boundary
 
-Archive the Friendsgiving experience and use foldtheory.fyi for the Fold Theory booking dashboard. The dashboard and its data must remain password protected. The user authorized the site replacement and publication; a second publishing approval is not required.
+The dashboard is a password-protected, single-user Node 26 application with local SQLite storage. Its listener deliberately refuses non-loopback binding. No production deployment, hosted team access or live provider connection has been verified.
 
-## Verified existing site
+The local implementation uses Node HTTP, filesystem access and `node:sqlite`. It cannot be deployed unchanged as a Cloudflare Worker or D1 application. A hosted release needs a compatible persistent Node runtime or an explicit runtime and storage adaptation. Do not expose or reverse-proxy the development listener to the public internet.
 
-- Sites project: `appgprj_6afa8f5569a881919fc82229746cdcc6`.
-- Custom domain: `foldtheory.fyi`, active with active TLS.
-- Existing access: public Site with an application-level event-password gate, observed in the browser.
-- Last successful deployment returned in version history: version 9, commit `8638c463562aad387e5ee21e0bfb96db4a6882f3`.
-- Newer saved source: version 12, commit `084c0448d3cdba5afc01696d572fc1b0fc43ab14`. Versions 10–12 did not return deployment IDs.
-- Live database: binding `DB`, table `rsvps`. A complete snapshot was saved privately outside application source. Do not expose it through dashboard APIs or a public archive route.
+## Configuration and data
 
-## Current blockers
+- Configure application settings with `LIER_*` environment variables and provider credentials with the names in `backend/.env.example`.
+- For an existing local workspace, set `LIER_DB_PATH` to its existing database and update application configuration to `LIER_*` before starting. Preserve the database and stable artist IDs; changing the product configuration does not require rebuilding stored evidence.
+- Keep runtime databases, passwords, provider tokens and private event records outside application source and static assets. Use managed secrets and access-controlled persistent storage when hosting.
+- Retain source-specific access and expiry rules. Add an unattended retention process and verify backup/export expiry before collecting continuously.
+- Record database migrations explicitly. Test backup restoration and rollback against the exact application and schema versions intended for deployment.
 
-The official Sites source workflow could not resolve `git.chatgpt-team.site` from this execution environment. No local source checkout was found. The hosted source/build versions are retained, but a complete offline source/assets archive has not been obtained. Opening a local server was also denied with `listen EPERM`, preventing browser QA. No source push, publication, access-policy change, password change, or DNS change has been performed.
+## Authentication requirements
 
-The runnable dashboard in this folder uses the existing Node 26 backend and SQLite. That local service is not a Cloudflare Worker and must not be packaged as if it were one. The existing hosted site's source must be opened before adapting its deployment and password gate. An earlier unrelated unpublished Sites project exists but is not the foldtheory.fyi project; its hosting manifest is intentionally excluded from LIER. Use the exact existing domain project ID above when recovering the deployed source.
+Every hosted dashboard and data API must remain password protected. Local startup requires `LIER_DASHBOARD_PASSWORD` with at least 12 characters and has no default password. The password must never be supplied in frontend files, source control, public logs or API responses.
 
-## Completion sequence
+The local service has HttpOnly SameSite=Strict cookies, absolute session expiry, logout, login rate limiting and origin checks. A hosted adaptation must retain those controls, serve HTTPS and use Secure cookies. The local HTTP cookie configuration is not a production configuration.
 
-1. Restore authorized execution-runtime connectivity and open the existing Site with its source helper into the prepared empty checkout.
-2. Preserve source/assets for both the published rollback target and latest saved version. Keep the original password gate, database binding, and RSVP data intact during the transition.
-3. Inspect the recovered hosting format and append any new database migrations without altering historical migrations or the RSVP table. Adapt the dashboard API to the supported Cloudflare runtime or establish an authenticated backend on a persistent Node host. Do not expose the loopback-only development service.
-4. Retain password protection for every dashboard page and API. Verify direct unauthenticated requests, session expiry, logout and cross-origin mutations. Preserve the existing password unless the user requests a change. Keep credentials and RSVP records out of client code and source archives intended for publication.
-5. Build and test from the recovered repository; save its exact pushed commit and deploy through the existing Site. Verify deployment success and custom-domain behavior. Preserve rollback identifiers and any separate archive route without enabling old event submissions.
+A shared password does not establish user accounts, workspace membership, roles or tenant isolation. Define and test those boundaries before making the application a shared team service. Do not infer permission to read another workspace from an artist ID or provider identifier.
 
-This document records incomplete work. A local passing test or runnable preview does not establish a domain deployment.
+## Release sequence
+
+1. Select the hosting runtime and persistent database, then document the application entry point, secret injection and storage bindings.
+2. Preserve the source, assets and schema version needed for rollback. Keep database backups private and verify restoration before a release that changes persistent state.
+3. Adapt and test the HTTP, storage and authentication layers for the selected runtime. Keep source acquisition credentials server-side and retain strict validation at persistence boundaries.
+4. Run the automated suite and a real-socket/browser smoke test. Verify unauthenticated API rejection, login failure and success, session expiry, logout, cross-origin rejection, roster persistence and authorized evidence imports.
+5. Deploy an identified source commit with the required configuration. Verify HTTPS, authenticated page/API behavior, persistent data, request failures and rollback in the actual hosted environment.
+6. Establish source access separately: collect and inspect a real authorized observation before describing any provider as live connected.
+
+## Verification limits
+
+The automated suite uses controlled provider responses, temporary SQLite databases and the actual HTTP request handler in process. The authoring environment denied loopback listeners with `listen EPERM`; real-socket and browser QA remain unverified. A separate TypeScript compiler check has not been run.
+
+A passing local test suite does not establish a successful hosted release, live source coverage, shared-workspace authorization or payment processing. Record those acceptance results separately when they are performed.

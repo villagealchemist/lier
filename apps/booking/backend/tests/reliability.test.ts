@@ -45,7 +45,7 @@ test('an expired lease cannot commit even if no replacement worker has claimed i
 });
 
 test('a crashed worker is recoverable after reopening the on-disk store',()=>{
-  const folder=mkdtempSync(join(tmpdir(),'fold-lease-')),path=join(folder,'test.sqlite');
+  const folder=mkdtempSync(join(tmpdir(),'lier-lease-')),path=join(folder,'test.sqlite');
   const first=new Store(path);first.begin(request,at(),at(86400000),{leaseDurationMs:1000});first.close();
   const recovered=new Store(path);
   try{
@@ -57,7 +57,7 @@ test('a crashed worker is recoverable after reopening the on-disk store',()=>{
 });
 
 test('independent SQLite connections cannot finish with an obsolete lease token',()=>{
-  const folder=mkdtempSync(join(tmpdir(),'fold-fence-')),path=join(folder,'test.sqlite');
+  const folder=mkdtempSync(join(tmpdir(),'lier-fence-')),path=join(folder,'test.sqlite');
   const a=new Store(path),b=new Store(path);
   try{
     const old=a.begin(request,at(),at(86400000),{leaseDurationMs:1000});
@@ -127,7 +127,7 @@ test('profile provenance and expiry follow the same boundary as metric values',a
 });
 
 test('v0.1 databases retain data and old abandoned running rows can be reclaimed',()=>{
-  const folder=mkdtempSync(join(tmpdir(),'fold-migration-')),path=join(folder,'old.sqlite');
+  const folder=mkdtempSync(join(tmpdir(),'lier-migration-')),path=join(folder,'old.sqlite');
   const legacy=new DatabaseSync(path);
   legacy.exec('CREATE TABLE runs (request_id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, artist_id TEXT NOT NULL, source TEXT NOT NULL, external_id TEXT NOT NULL, status TEXT NOT NULL, collected_at TEXT NOT NULL, completed_at TEXT, expires_at TEXT NOT NULL, coverage TEXT, warnings TEXT, error_code TEXT, retry_after_ms INTEGER)');
   const hash=createHash('sha256').update(JSON.stringify([request.artistId,request.source,request.externalId])).digest('hex');

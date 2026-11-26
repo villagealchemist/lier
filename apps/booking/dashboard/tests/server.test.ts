@@ -13,8 +13,8 @@ const fixedNow = () => new Date('2026-11-26T12:00:00.000Z');
 const channel = 'UCabcdefghijklmnopqrstuv';
 const testPassword = 'fixture-password-not-for-production';
 async function fixture(t: any, options: Record<string, unknown> = {}, serverOptions: { login?: boolean; now?: () => number; port?: number } = {}) {
-  const directory = mkdtempSync(join(tmpdir(), 'fold-dashboard-'));
-  writeFileSync(join(directory, 'index.html'), '<!doctype html><title>Fold Theory</title>');
+  const directory = mkdtempSync(join(tmpdir(), 'lier-dashboard-'));
+  writeFileSync(join(directory, 'index.html'), '<!doctype html><title>LIER</title>');
   writeFileSync(join(directory, 'app.mjs'), 'export {};');
   writeFileSync(join(directory, 'styles.css'), 'body { color: black; }');
   const dbPath = join(directory, 'workspace.sqlite');
@@ -42,7 +42,7 @@ async function fixture(t: any, options: Record<string, unknown> = {}, serverOpti
   };
   let cookie = '';
   const api = async (path: string, method = 'GET', value?: unknown, headers: Record<string, string> = {}) => {
-    const response = await send(path, { method, headers: { ...(cookie ? { cookie } : {}), ...(method === 'GET' ? {} : { origin, 'x-fold-theory-request': '1', 'content-type': 'application/json' }), ...headers }, body: value === undefined ? undefined : JSON.stringify(value) });
+    const response = await send(path, { method, headers: { ...(cookie ? { cookie } : {}), ...(method === 'GET' ? {} : { origin, 'x-lier-request': '1', 'content-type': 'application/json' }), ...headers }, body: value === undefined ? undefined : JSON.stringify(value) });
     const nextCookie = response.headers.get('set-cookie');
     if (nextCookie) cookie = nextCookie.split(';')[0];
     return { status: response.status, headers: response.headers, json: await response.json() as any };
@@ -116,7 +116,7 @@ test('same-origin mutation guard and host validation reject cross-site and rebin
   const missing = await send('/api/artists', { method: 'POST', headers, body: JSON.stringify({ name: 'Not created' }) });
   assert.equal(missing.status, 403); await missing.arrayBuffer();
   assert.equal((await api('/api/artists', 'POST', { name: 'Not created' }, { origin: 'https://other.example' })).status, 403);
-  assert.equal((await api('/api/artists', 'POST', { name: 'Not created' }, { 'x-fold-theory-request': '0' })).status, 403);
+  assert.equal((await api('/api/artists', 'POST', { name: 'Not created' }, { 'x-lier-request': '0' })).status, 403);
   const crossSite = await api('/api/artists', 'GET', undefined, { 'sec-fetch-site': 'cross-site' });
   assert.equal(crossSite.status, 403);
   const rebinding = await send('/api/status', { headers: { host: 'attacker.example' } });
@@ -178,12 +178,12 @@ test('collection uses fixed policies and existing ingestion storage without acce
   assert.equal((await api('/api/status')).json.sources.find((s: any) => s.source === 'youtube').lastRun.status, 'blocked');
 });
 test('configured collection stores validated observations and preserves their provenance', async t => {
-  const directory = mkdtempSync(join(tmpdir(), 'fold-policy-'));
+  const directory = mkdtempSync(join(tmpdir(), 'lier-policy-'));
   const policyFile = join(directory, 'policy.json');
   writeFileSync(policyFile, JSON.stringify({ youtube: { enabled: true, retentionDays: 7 } }));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const { api } = await fixture(t, {
-    env: { FOLD_POLICY_FILE: policyFile, YOUTUBE_API_KEY: 'fixture-only' },
+    env: { LIER_POLICY_FILE: policyFile, YOUTUBE_API_KEY: 'fixture-only' },
     collect: async (request: any) => parseYouTube({ items: [{ id: request.externalId, statistics: { hiddenSubscriberCount: false, subscriberCount: '1230', viewCount: '8900', videoCount: '7' } }] }, request)
   });
   const artist = (await api('/api/artists', 'POST', { name: 'Validated collection', sourceIds: { youtube: channel } })).json.artist;

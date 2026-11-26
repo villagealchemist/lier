@@ -7,7 +7,7 @@ export function createJsonGet(options: {fetcher?: typeof fetch; sleep?: (ms:numb
   const fetcher=options.fetcher??fetch,sleep=options.sleep??delay,now=options.now??Date.now;
   return async (url,requestOptions={})=>{
     if(url.protocol!=='https:'||!hosts.has(url.hostname)||url.port||url.username||url.password)throw new IngestionError('disallowed_provider_url');
-    const headers:Record<string,string>={Accept:'application/json','User-Agent':'FoldTheory-Ingestion/0.2.0'};
+    const headers:Record<string,string>={Accept:'application/json','User-Agent':'LIER-Ingestion/0.2.0'};
     if(requestOptions.userAgent!==undefined){
       if(typeof requestOptions.userAgent!=='string'||!requestOptions.userAgent.trim()||!/^([\x20-\x7e]){3,256}$/.test(requestOptions.userAgent))throw new IngestionError('invalid_user_agent');
       headers['User-Agent']=requestOptions.userAgent;

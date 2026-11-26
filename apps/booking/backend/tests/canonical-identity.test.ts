@@ -49,7 +49,7 @@ test('Last.fm case variants replay the same request and cannot attach to another
 });
 
 test('v0.1 uppercase identities and historical hashes migrate without dropping observations',async()=>{
-  const directory=mkdtempSync(join(tmpdir(),'fold-theory-legacy-'));const path=join(directory,'legacy.sqlite');
+  const directory=mkdtempSync(join(tmpdir(),'lier-legacy-'));const path=join(directory,'legacy.sqlite');
   legacyDatabase(path,[{externalId:upper,artistId:'artist-1'},{externalId:lower,artistId:'artist-1'}],[{...request,externalId:upper}]);
   const store=new Store(path);
   try{
@@ -63,7 +63,7 @@ test('v0.1 uppercase identities and historical hashes migrate without dropping o
 });
 
 test('legacy cross-artist case collisions fail closed without rewriting the conflicting data',()=>{
-  const directory=mkdtempSync(join(tmpdir(),'fold-theory-collision-'));const path=join(directory,'legacy.sqlite');
+  const directory=mkdtempSync(join(tmpdir(),'lier-collision-'));const path=join(directory,'legacy.sqlite');
   try{
     legacyDatabase(path,[{externalId:upper,artistId:'artist-1'},{externalId:lower,artistId:'artist-2'}]);
     assert.throws(()=>new Store(path),/legacy_identity_case_conflict/);
@@ -72,7 +72,7 @@ test('legacy cross-artist case collisions fail closed without rewriting the conf
 });
 
 test('unrecognized historical request fingerprints fail closed and remain unchanged',()=>{
-  const directory=mkdtempSync(join(tmpdir(),'fold-theory-hash-'));const path=join(directory,'legacy.sqlite');
+  const directory=mkdtempSync(join(tmpdir(),'lier-hash-'));const path=join(directory,'legacy.sqlite');
   try{
     legacyDatabase(path,[{externalId:upper,artistId:'artist-1'}],[{...request,externalId:upper}],true);
     assert.throws(()=>new Store(path),/legacy_run_fingerprint_conflict/);

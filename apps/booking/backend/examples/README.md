@@ -10,7 +10,7 @@ For actual evidence, construct a separate file using verified records and declar
 
 - `platform` identifies the original measured platform. `provenance.provider` identifies who supplied the report; keep both.
 - `sourceAccountId` namespaces the supplier account so identifiers from unrelated accounts do not collide.
-- `artistId` is an explicitly verified Fold Theory artist ID. No name matching occurs.
+- `artistId` is an explicitly verified LIER artist ID. No name matching occurs.
 - `observedPeriod.start` and `.end` are inclusive calendar dates reported by the source. Preserve the original range; do not relabel lifetime or daily data as monthly listeners. This schema supports a bounded date range, not open-ended lifetime observations.
 - City, region and ISO country code are required geographic context. `region: null` means unknown. These values must describe audience geography, not the artist's hometown.
 - `value: 0` with `availability: reported` is a measured zero. A missing metric uses `value: null` and `not_reported`; a source-suppressed metric uses `suppressed`. No missing value becomes zero.
@@ -26,7 +26,7 @@ Each record retains the entire `lineupArtistIds` array. Querying by any artist r
 
 ## Provenance, revisions and retention
 
-`sourceGeneratedAt` is the supplier's report timestamp, or null if unknown. `importedAt` is assigned by Fold Theory and never substituted for that timestamp. The declared retention deadline, `authorization.retainUntil`, is mandatory and enforced on queries. It must be set from the actual applicable authorization, not an arbitrary default. Source restrictions continue to apply to exported data, including any limits on derived metrics; importing a report does not bypass those limits.
+`sourceGeneratedAt` is the supplier's report timestamp, or null if unknown. `importedAt` is assigned by LIER and never substituted for that timestamp. The declared retention deadline, `authorization.retainUntil`, is mandatory and enforced on queries. It must be set from the actual applicable authorization, not an arbitrary default. Source restrictions continue to apply to exported data, including any limits on derived metrics; importing a report does not bypass those limits.
 
 An import ID is immutable: re-importing the same normalized content returns the original receipt, while changing content under that ID fails. A correction uses a new import ID. Current query views deduplicate by source account and factual key and prefer a newer source-generated timestamp, then import time when source timestamps are identical. A first observation may have an unknown source timestamp, but a later import for the same factual key is rejected as `ambiguous_source_time_revision` if either revision has unknown source time. Import time is not compared against source time. Re-importing the same import ID and content remains idempotent. An explicit supersedes workflow is not yet implemented.
 

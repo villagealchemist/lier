@@ -107,10 +107,10 @@ test('transport permits only the expected auth scheme on each approved token end
 test('public identity resolver can send a safe identified User-Agent without auth',async()=>{
   let headers:Headers|undefined;
   const get=createJsonGet({fetcher:async(_url,options)=>{headers=new Headers(options?.headers);return Response.json({search:[]});}});
-  await get(new URL('https://www.wikidata.org/w/api.php'),{userAgent:'FoldTheory/0.2.0 (test@example.com)'});
-  assert.equal(headers?.get('User-Agent'),'FoldTheory/0.2.0 (test@example.com)');
+  await get(new URL('https://www.wikidata.org/w/api.php'),{userAgent:'LIER/0.2.0 (test@example.com)'});
+  assert.equal(headers?.get('User-Agent'),'LIER/0.2.0 (test@example.com)');
   assert.equal(headers?.get('Authorization'),null);
-  await assert.rejects(get(new URL('https://www.wikidata.org/w/api.php'),{userAgent:'FoldTheory\nX-Injected: true'}),/invalid_user_agent/);
+  await assert.rejects(get(new URL('https://www.wikidata.org/w/api.php'),{userAgent:'LIER\nX-Injected: true'}),/invalid_user_agent/);
   await assert.rejects(get(new URL('https://www.wikidata.org/w/api.php'),{userAgent:' '.repeat(300)}),/invalid_user_agent/);
 });
 

@@ -63,7 +63,7 @@ export function createDashboardHandler(options: ServerOptions) {
   const digest = (token: string) => createHash('sha256').update(token).digest('hex');
   const sessionToken = (req: IncomingMessage) => {
     const cookies = (req.headers.cookie ?? '').split(';').map(item => item.trim());
-    const values = cookies.filter(item => item.startsWith('fold_session=')).map(item => item.slice('fold_session='.length));
+    const values = cookies.filter(item => item.startsWith('lier_session=')).map(item => item.slice('lier_session='.length));
     return values.length === 1 && /^[A-Za-z0-9_-]{43}$/.test(values[0]) ? values[0] : null;
   };
   const authenticated = (req: IncomingMessage) => {
@@ -91,7 +91,7 @@ export function createDashboardHandler(options: ServerOptions) {
       const method = req.method ?? 'GET', api = url.pathname.startsWith('/api/');
       if (api) {
         if (req.headers['sec-fetch-site'] === 'cross-site' || req.headers.origin && req.headers.origin !== origin) throw new DashboardError('same_origin_required', 403);
-        if (!['GET', 'HEAD'].includes(method) && (req.headers.origin !== origin || req.headers['x-fold-theory-request'] !== '1')) throw new DashboardError('same_origin_required', 403);
+        if (!['GET', 'HEAD'].includes(method) && (req.headers.origin !== origin || req.headers['x-lier-request'] !== '1')) throw new DashboardError('same_origin_required', 403);
         if (method === 'GET' && url.pathname === '/api/session') return json(res, 200, sessionState(authenticated(req)));
         if (method === 'POST' && url.pathname === '/api/session/login') {
           const now = clock();
@@ -111,13 +111,13 @@ export function createDashboardHandler(options: ServerOptions) {
           if (sessions.size >= 8) sessions.delete(sessions.keys().next().value!);
           const token = randomBytes(32).toString('base64url');
           sessions.set(digest(token), now + sessionDuration);
-          res.setHeader('set-cookie', `fold_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${sessionDuration / 1000}`);
+          res.setHeader('set-cookie', `lier_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${sessionDuration / 1000}`);
           return json(res, 200, sessionState(true));
         }
         if (method === 'POST' && url.pathname === '/api/session/logout') {
           const token = sessionToken(req);
           if (token) sessions.delete(digest(token));
-          res.setHeader('set-cookie', 'fold_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0');
+          res.setHeader('set-cookie', 'lier_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0');
           return json(res, 200, sessionState(false));
         }
         if (!authenticated(req)) throw new DashboardError('authentication_required', 401);
@@ -173,13 +173,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   let service: DashboardService | undefined;
   try {
     // Validate before creating a database or binding any socket.
-    const host = process.env.FOLD_HOST ?? '127.0.0.1';
+    const host = process.env.LIER_HOST ?? '127.0.0.1';
     if (!['127.0.0.1', '::1', 'localhost'].includes(host)) throw new DashboardError('loopback_binding_required');
-    const password = process.env.FOLD_DASHBOARD_PASSWORD;
+    const password = process.env.LIER_DASHBOARD_PASSWORD;
     if (!password || password.length < 12 || password.length > 1024) throw new DashboardError('dashboard_password_required_minimum_12_characters');
-    const port = Number(process.env.FOLD_DASHBOARD_PORT ?? 4317);
+    const port = Number(process.env.LIER_DASHBOARD_PORT ?? 4317);
     if (!Number.isInteger(port) || port < 0 || port > 65535) throw new DashboardError('invalid_port');
-    service = new DashboardService({ dbPath: process.env.FOLD_DB_PATH ?? resolve('data/fold-theory.sqlite') });
+    service = new DashboardService({ dbPath: process.env.LIER_DB_PATH ?? resolve('data/lier.sqlite') });
     const running = await startDashboardServer({ service, password, host, port });
     process.stdout.write(JSON.stringify({ mode: 'local', url: running.url }) + '\n');
     const shutdown = async () => { await running.close(); service!.close(); process.exit(0); };

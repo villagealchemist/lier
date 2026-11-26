@@ -16,7 +16,7 @@ Artist, event, performance, venue, organization, party and provider-account IDs 
 
 ## Data contracts to establish before adding modules
 
-- A collective/organization owns private plans and commercial records. Every hosted read and write needs authorization for that organization. The current local store has no tenant IDs or role model and must not be exposed as a shared service.
+- A workspace owns private plans and commercial records. Every hosted read and write needs authorization for that workspace. The current local store has no tenant IDs or role model and must not be exposed as a shared service.
 - A booking decision records its assumptions, currency, selected evidence references and decision time. Later corrections are versioned; the original forecast remains inspectable within permitted retention.
 - A ticket order, reservation, payment attempt, payment confirmation, refund and ticket entitlement have separate state. Use stable provider-event IDs and idempotent processing when webhook-driven payments are implemented.
 - Financial records record integer minor units and currency. A settlement agreement specifies its calculation basis, costs, splits, effective version and rounding rules. Ledger and reconciliation design must precede automated settlement or payouts.
@@ -29,7 +29,7 @@ Node 26 runs TypeScript with type stripping. The ingestion backend uses `node:sq
 
 Password enforcement is local, with HttpOnly SameSite=Strict session cookies, logout, absolute expiry, a bounded login rate and origin checks. It is not an account, membership or hosted authorization system. The listener explicitly refuses non-loopback binding.
 
-The original README proposed Kysely and Stripe Connect. Neither is installed or integrated. Select the production persistence and payment implementation after recovering the hosting source and defining the first event/ticketing workflow. The existing SQLite implementation cannot be deployed unchanged to Cloudflare Workers/D1.
+The original README proposed Kysely and Stripe Connect. Neither is installed or integrated. Select production persistence and payment implementations against the hosting runtime and the first event/ticketing workflow. The existing SQLite implementation cannot be deployed unchanged to Cloudflare Workers/D1.
 
 ## Validation limits
 

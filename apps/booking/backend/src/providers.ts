@@ -28,7 +28,7 @@ export function parseSpotify(payload:unknown,r:IngestRequest):Snapshot {
   result.profile={displayName:text(artist.name),...(url?{url}:{})};
   result.metrics=[metric('followers',nativeInteger(followers?.total),'artist','current'),{...metric('popularity',popularity,'artist','current'),unit:'score_0_100'}];
   if(result.metrics.some(m=>m.value===null))result.coverage='partial';
-  result.warnings=['Follower and popularity fields depend on app entitlement and may be absent. This endpoint supplies neither monthly listeners nor listening-city breakdowns. Popularity is Spotify’s platform score, not a Fold Theory booking score.'];
+  result.warnings=['Follower and popularity fields depend on app entitlement and may be absent. This endpoint supplies neither monthly listeners nor listening-city breakdowns. Popularity is Spotify’s platform score, not a LIER booking score.'];
   return result;
 }
 export function parseSoundCloud(payload:unknown,r:IngestRequest):Snapshot {

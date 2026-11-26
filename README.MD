@@ -10,9 +10,9 @@ Ticketing is one part of that system. The larger goal is to connect the research
 
 ## Who this is for
 
-Independent collectives, promoters, artists, and the people building their scenes. Fold Theory is the first working use case for the artist-research and booking workspace. **Fold Theory is the collective; LIER is the platform.**
+Artists, promoters, event organizers, and the people building their scenes. LIER connects artist research and booking decisions with the operations and financial results of an event.
 
-Chartmetric is a functional reference for artist intelligence because Fold Theory already uses it to understand popularity when booking. LIER's research layer should provide useful, verifiable evidence and add the workflows MJ and the collective want: personal taste, local market fit, booking assumptions, and actual event results. Chartmetric-equivalent data coverage is not established by this prototype.
+Chartmetric is a functional reference for artist intelligence. LIER's research layer aims to provide verifiable evidence alongside personal taste, local market fit, booking assumptions, and actual event results. Chartmetric-equivalent data coverage is not established by this prototype.
 
 ## The business loop
 
@@ -44,14 +44,14 @@ npm test
 npm run dashboard
 ```
 
-Before starting the dashboard, copy `apps/booking/backend/.env.example` to `.env` in that same directory and set `FOLD_DASHBOARD_PASSWORD` to a password of at least 12 characters. Source credentials stay in that untracked file. See [the module guide](apps/booking/dashboard/README.md).
+Before starting the dashboard, copy `apps/booking/backend/.env.example` to `.env` in that same directory and set `LIER_DASHBOARD_PASSWORD` to a password of at least 12 characters. Source credentials stay in that untracked file. See [the module guide](apps/booking/dashboard/README.md).
 
-The module currently uses Node's SQLite API and a single-user, loopback-only service. It is not a hosted multi-collective application. All 105 automated tests pass against controlled fixtures and in-process HTTP handlers. Live provider collection, real-socket browser QA and production deployment remain unverified. No payment processing or money movement is implemented.
+The module currently uses Node's SQLite API and a single-user, loopback-only service. Hosted team access and tenant isolation are not implemented. All 105 automated tests pass against controlled fixtures and in-process HTTP handlers. Live provider collection, real-socket browser QA and production deployment remain unverified. No payment processing or money movement is implemented.
 
 ## Product direction
 
 The [original LIER vision](docs/ORIGINAL-VISION.md) included custom ticketing and access, anonymous community interaction, performer tools, Stripe Connect/webhooks and modular ML hooks. Those remain possible modules, with ticketing and money visibility joining the artist-intelligence work in one product. Provider choices and ML capabilities are proposals, not delivered integrations.
 
-Keep the original principles: artist-first economics, transparency about costs and payouts, respect for anonymity, and control over a collective's own records. User taste must remain identifiable as user taste; measured evidence needs its source and date. Predictions must remain distinguishable from actual outcomes.
+Keep the original principles: artist-first economics, transparency about costs and payouts, respect for anonymity, and control over private records. User taste must remain identifiable as user taste; measured evidence needs its source and date. Predictions must remain distinguishable from actual outcomes.
 
 See [product scope](docs/PRODUCT-SCOPE.md) and [architecture boundaries](docs/ARCHITECTURE.md) for the planned connection between modules and the current implementation limits.
